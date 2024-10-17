@@ -23,13 +23,13 @@ class ShowThemeSerializer(serializers.ModelSerializer):
 
 
 class PlanetariumDomeSerializer(serializers.ModelSerializer):
-    class Model:
+    class Meta:
         model = PlanetariumDome
         fields = ("id", "name", "rows", "seats_in_row")
 
 
 class AstronomyShowSerializer(serializers.ModelSerializer):
-    class Model:
+    class Meta:
         model = AstronomyShow
         fields = ("id", "title", "description", "show_theme")
 

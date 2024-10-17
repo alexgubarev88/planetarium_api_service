@@ -38,7 +38,7 @@ class ShowSession(models.Model):
 
 
 class Reservation(models.Model):
-    created_at = models.DateTimeField(auto_created=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
