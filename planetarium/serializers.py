@@ -44,3 +44,7 @@ class ShowSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowSession
         fields = ("id", "astronomy_show", "planetarium_dome", "show_time")
+
+
+class ShowSessionListSerializer(ShowSessionSerializer):
+    astronomy_show = AstronomyShowSerializer()
