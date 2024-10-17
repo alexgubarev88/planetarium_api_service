@@ -7,7 +7,7 @@ from planetarium_api_service import settings
 class AstronomyShow(models.Model):
     title = models.CharField(max_length=63)
     description = models.TextField()
-    show_theme = models.ForeignKey("ShowTheme", on_delete=models.DO_NOTHING)
+    show_theme = models.ManyToManyField("ShowTheme", related_name="show_themes")
 
     def __str__(self):
         return f"Title: {self.title}, Description: {self.description}, Theme: {self.show_theme}"
