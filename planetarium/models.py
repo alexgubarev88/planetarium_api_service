@@ -60,9 +60,7 @@ class Ticket(models.Model):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="tickets")
 
     class Meta:
-        constraints = [
-            UniqueConstraint(fields=["seat", "show_session"], name="unique_ticket_seat_show_session")
-        ]
+        unique_together = ["seat", "show_session"]
 
     def __str__(self):
         return f"{self.show_session}, row: {self.row}, seat: {self.seat}"
