@@ -80,9 +80,22 @@ class ShowSessionListSerializer(serializers.ModelSerializer):
     astronomy_show_title = serializers.CharField(source="astronomy_show.title", read_only=True)
     astronomy_show_description = serializers.CharField(source="astronomy_show.description", read_only=True)
 
+    taken_seats = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="seat",
+        source="tickets"
+    )
+
     class Meta:
         model = ShowSession
-        fields = ("id", "astronomy_show_title", "astronomy_show_description", "planetarium_dome", "show_time")
+        fields = ("id",
+                  "astronomy_show_title",
+                  "astronomy_show_description",
+                  "planetarium_dome",
+                  "show_time",
+                  "taken_seats"
+                  )
 
 
 class ShowSessionRetrieveSerializer(ShowSessionSerializer):
