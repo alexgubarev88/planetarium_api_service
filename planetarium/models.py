@@ -29,6 +29,10 @@ class PlanetariumDome(models.Model):
     def size(self):
         return "large" if self.rows >= 5 else "medium"
 
+    @property
+    def capacity(self) -> int:
+        return self.rows * self.seats_in_row
+
     def __str__(self):
         return f" {self.name} ({self.rows} rows, {self.seats_in_row} seats in row)"
 
@@ -65,11 +69,15 @@ class Ticket(models.Model):
     def __str__(self):
         return f"{self.show_session}, row: {self.row}, seat: {self.seat}"
 
-    def clean(self):
-        if not (1 <= self.seat <= self.show_session.planetarium_dome.seats_in_row):
-            raise ValueError({
-                "seat": f"seat must be in range [1, {self.show_session.planetarium_dome.seats_in_row}], not {self.seat}"
+    @staticmethod
+    def validate_seat(seat: int, num_seats: int, error_to_raise):
+        if not (1 <= seat <= num_seats):
+            raise error_to_raise({
+                "seat": f"seat must be in range [1, {Ticket.show_session.planetarium_dome.seats_in_row}], not {seat}"
             })
+
+    def clean(self):
+        Ticket.validate_seat(self.seat, Ticket.show_session.planetarium_dome.capacity, ValueError)
 
     def save(self, *args, **kwargs):
         self.full_clean()

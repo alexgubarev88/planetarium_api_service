@@ -16,6 +16,13 @@ class TicketSerializer(serializers.ModelSerializer):
         model = Ticket
         fields = ("id", "row", "seat", "show_session", "reservation")
 
+    def validate(self, attrs):
+        Ticket.validate_seat(
+            attrs["seat"],
+            attrs['show_session'].planetarium_dome.seats_in_row,
+            serializers.ValidationError
+        )
+
 
 class ShowThemeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,7 +33,7 @@ class ShowThemeSerializer(serializers.ModelSerializer):
 class PlanetariumDomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanetariumDome
-        fields = ("id", "name", "rows", "seats_in_row", "size")
+        fields = ("id", "name", "rows", "seats_in_row", "size", "capacity")
 
 
 class AstronomyShowSerializer(serializers.ModelSerializer):
