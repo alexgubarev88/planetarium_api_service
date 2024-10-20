@@ -1,3 +1,4 @@
+from django.db.models import ExpressionWrapper, F, IntegerField, Count
 from rest_framework import viewsets
 
 from planetarium.models import (
@@ -47,9 +48,8 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
         if show_theme:
             queryset = queryset.filter(show_theme__name__icontains=show_theme)
         if self.action in ["list", "retrieve"]:
-            return queryset.prefetch_related("show_theme")
-        else:
-            return queryset.distinct()
+            queryset.prefetch_related("show_theme")
+        return queryset.distinct()
 
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
@@ -65,10 +65,24 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        if self.action in ["list", "retrieve"]:
-            return queryset.select_related().prefetch_related("tickets")
-        else:
-            return queryset
+        queryset = queryset.select_related("planetarium_dome", "astronomy_show")
+
+        if self.action == "list":
+            queryset = queryset.annotate(
+                dome_capacity=ExpressionWrapper(
+                    F("planetarium_dome__rows") * F("planetarium_dome__seats_in_row"),
+                    output_field=IntegerField()
+                ),
+                tickets_available=ExpressionWrapper(
+                    F("planetarium_dome__rows") * F("planetarium_dome__seats_in_row") - Count("tickets"),
+                    output_field=IntegerField()
+                )
+            )
+
+        elif self.action == "retrieve":
+            queryset = queryset.prefetch_related("tickets")
+
+        return queryset.distinct()
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
