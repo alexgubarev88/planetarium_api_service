@@ -47,9 +47,11 @@ class AstronomyShowRetrieveSerializer(AstronomyShowSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    tickets = TicketSerializer(many=True, read_only=False)
+
     class Meta:
         model = Reservation
-        fields = ("id", "created_at", "user")
+        fields = ("id", "created_at", "tickets")
 
 
 class ShowSessionSerializer(serializers.ModelSerializer):
