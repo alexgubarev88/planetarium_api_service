@@ -1,4 +1,6 @@
 from django.db.models import ExpressionWrapper, F, IntegerField, Count
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 
 from planetarium.models import (
@@ -54,6 +56,18 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
         if self.action in ["list", "retrieve"]:
             queryset.prefetch_related("show_theme")
         return queryset.distinct()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "show_theme",
+                type=OpenApiTypes.STR,
+                description="Filter by show theme (ex. ?show_type=space)"
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
