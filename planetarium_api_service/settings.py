@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "planetarium",
     "user",
-    "rest_framework.authtoken"
+    "rest_framework.authtoken",
+    "drf_spectacular"
 ]
 
 AUTH_USER_MODEL = "user.User"
@@ -140,4 +141,17 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 7,
     "DEFAULT_PERMISSION_CLASSES":
         ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Planetarium Service API",
+    "DESCRIPTION": "Order tickets for Astronomy Show",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    },
 }
