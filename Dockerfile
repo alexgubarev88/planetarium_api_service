@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.12.4-alpine3.20
 LABEL maintainer="alexgubarev885@gmail.com"
 
 ENV PYTHONUNBUFFERED 1
