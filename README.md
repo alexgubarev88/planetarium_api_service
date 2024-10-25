@@ -32,7 +32,8 @@ DRF project for managing planetarium.
  - Documentation for views(go to api/schema/swagger-ui/).
  - CRUD implementation for planetarium.
  - Filtering for astronomy show.
-
+ - 
+![img_1.png](img_1.png)
 ![img.png](img.png)
 
 # Contact
