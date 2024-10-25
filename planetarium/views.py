@@ -8,7 +8,7 @@ from planetarium.models import (
     ShowSession,
     AstronomyShow,
     Reservation,
-    PlanetariumDome
+    PlanetariumDome,
 )
 from planetarium.permisions import IsAdminAllORIsAuthenticatedReadOnly
 from planetarium.serializers import (
@@ -20,7 +20,7 @@ from planetarium.serializers import (
     ShowSessionListSerializer,
     AstronomyShowListSerializer,
     AstronomyShowRetrieveSerializer,
-    ShowSessionRetrieveSerializer
+    ShowSessionRetrieveSerializer,
 )
 
 
@@ -63,7 +63,7 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
             OpenApiParameter(
                 "show_theme",
                 type=OpenApiTypes.STR,
-                description="Filter by show theme (ex. ?show_type=space)"
+                description="Filter by show theme (ex. ?show_type=space)",
             )
         ]
     )
@@ -91,12 +91,13 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             queryset = queryset.annotate(
                 dome_capacity=ExpressionWrapper(
                     F("planetarium_dome__rows") * F("planetarium_dome__seats_in_row"),
-                    output_field=IntegerField()
+                    output_field=IntegerField(),
                 ),
                 tickets_available=ExpressionWrapper(
-                    F("planetarium_dome__rows") * F("planetarium_dome__seats_in_row") - Count("tickets"),
-                    output_field=IntegerField()
-                )
+                    F("planetarium_dome__rows") * F("planetarium_dome__seats_in_row")
+                    - Count("tickets"),
+                    output_field=IntegerField(),
+                ),
             )
 
         elif self.action == "retrieve":

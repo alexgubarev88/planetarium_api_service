@@ -8,14 +8,18 @@ from planetarium_api_service import settings
 
 
 def astronomy_show_image_path(instance: "AstronomyShow", filename: str) -> pathlib.Path:
-    filename = f"{slugify(instance.title)}-{uuid.uuid4()}" + pathlib.Path(filename).suffix
+    filename = (
+        f"{slugify(instance.title)}-{uuid.uuid4()}" + pathlib.Path(filename).suffix
+    )
     return pathlib.Path("upload/astronomy_show/") / pathlib.Path(filename)
 
 
 class AstronomyShow(models.Model):
     title = models.CharField(max_length=63)
     description = models.TextField()
-    show_theme = models.ManyToManyField("ShowTheme", related_name="show_themes", blank=True)
+    show_theme = models.ManyToManyField(
+        "ShowTheme", related_name="show_themes", blank=True
+    )
     image = models.ImageField(null=True, upload_to="astronomy_show_image_path")
 
     def __str__(self):
@@ -69,8 +73,12 @@ class Reservation(models.Model):
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
-    show_session = models.ForeignKey(ShowSession, on_delete=models.CASCADE, related_name="tickets")
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="tickets")
+    show_session = models.ForeignKey(
+        ShowSession, on_delete=models.CASCADE, related_name="tickets"
+    )
+    reservation = models.ForeignKey(
+        Reservation, on_delete=models.CASCADE, related_name="tickets"
+    )
 
     class Meta:
         unique_together = ["seat", "show_session"]
@@ -81,12 +89,16 @@ class Ticket(models.Model):
     @staticmethod
     def validate_seat(seat: int, num_seats: int, error_to_raise):
         if not (1 <= seat <= num_seats):
-            raise error_to_raise({
-                "seat": f"seat must be in range [1, {Ticket.show_session.planetarium_dome.seats_in_row}], not {seat}"
-            })
+            raise error_to_raise(
+                {
+                    "seat": f"seat must be in range [1, {Ticket.show_session.planetarium_dome.seats_in_row}], not {seat}"
+                }
+            )
 
     def clean(self):
-        Ticket.validate_seat(self.seat, Ticket.show_session.planetarium_dome.capacity, ValueError)
+        Ticket.validate_seat(
+            self.seat, Ticket.show_session.planetarium_dome.capacity, ValueError
+        )
 
     def save(self, *args, **kwargs):
         self.full_clean()

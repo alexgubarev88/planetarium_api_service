@@ -39,10 +39,7 @@ class PublicUserApiTest(TestCase):
         self.client = APIClient()
 
     def test_create_valid_user_success(self):
-        payload = {
-            "email": "test@test.com",
-            "password": "testuser"
-        }
+        payload = {"email": "test@test.com", "password": "testuser"}
 
         response = self.client.post(CREATE_USER_URL, payload)
 
@@ -52,20 +49,14 @@ class PublicUserApiTest(TestCase):
         self.assertNotIn("password", response.data)
 
     def test_user_exists(self):
-        payload = {
-            "email": "test@test.com",
-            "password": "testuser"
-        }
+        payload = {"email": "test@test.com", "password": "testuser"}
         get_user_model().objects.create_user(**payload)
         response = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_password_too_short(self):
-        payload = {
-            "email": "test@test.com",
-            "password": "test"
-        }
+        payload = {"email": "test@test.com", "password": "test"}
         response = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -86,11 +77,14 @@ class PrivateUserApiTests(TestCase):
         response = self.client.get(MANAGE_USER_URL)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, {
-            "id": self.user.id,
-            "email": self.user.email,
-            "is_staff": self.user.is_staff,
-        })
+        self.assertEqual(
+            response.data,
+            {
+                "id": self.user.id,
+                "email": self.user.email,
+                "is_staff": self.user.is_staff,
+            },
+        )
 
     def test_post_me_not_allowed(self):
         response = self.client.post(MANAGE_USER_URL, {})
