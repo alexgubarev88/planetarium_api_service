@@ -3,7 +3,7 @@ services:
     build:
       context: .
     env_file:
-      - .env
+      - .env.docker
     ports:
       - "8001:8000"
     command: >
