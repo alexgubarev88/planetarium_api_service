@@ -33,8 +33,8 @@ DRF project for managing planetarium.
  - CRUD implementation for planetarium.
  - Filtering for astronomy show.
 
-![img_1.png](img_1.png)
-![img.png](img.png)
+![img_1.png](static/img_1.png)
+![img.png](static/img.png)
 
 # Contact
 
